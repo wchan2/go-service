@@ -1,8 +1,6 @@
 package router
 
-import (
-	"regexp"
-)
+import "regexp"
 
 type path interface {
 	uri() string
@@ -18,11 +16,11 @@ func newNamedPath(uriPath string) path {
 }
 
 func (p *namedPath) match(path string) (bool, error) {
-	namedParamRegEx, err := regexp.Compile(`/(\(\?)?:\w+/g`)
+	namedParamRegEx, err := regexp.Compile(`(\(\?)?:\w+`)
 	if err != nil {
 		return false, err
 	}
-	regExURI := namedParamRegEx.ReplaceAllString(p.uriPath, `[a-zA-Z0-9]+`)
+	regExURI := namedParamRegEx.ReplaceAllString(p.uriPath, `[a-zA-Z0-9]+`) + `/?$`
 	return regexp.MatchString(regExURI, path)
 }
 
