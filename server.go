@@ -1,45 +1,41 @@
-package server
+package servicelayer
 
-import (
-	"net/http"
-
-	"github.com/wchan2/service-layer/router"
-)
+import "net/http"
 
 type Server interface {
-	Get(route string, handler http.HandlerFunc)
-	Put(route string, handler http.HandlerFunc)
-	Post(route string, handler http.HandlerFunc)
-	Delete(route string, handler http.HandlerFunc)
-	Patch(route string, handler http.HandlerFunc)
+	Get(route string, handler HTTPHandler)
+	Put(route string, handler HTTPHandler)
+	Post(route string, handler HTTPHandler)
+	Delete(route string, handler HTTPHandler)
+	Patch(route string, handler HTTPHandler)
 	Start(addr string)
 }
 
 func NewAppServer() Server {
-	return &appServer{appRouter: router.NewRouter()}
+	return &appServer{appRouter: NewRouter()}
 }
 
 type appServer struct {
-	appRouter router.AppRouter
+	appRouter AppRouter
 }
 
-func (svr *appServer) Post(route string, handler http.HandlerFunc) {
+func (svr *appServer) Post(route string, handler HTTPHandler) {
 	svr.appRouter.Register("POST", route, handler)
 }
 
-func (svr *appServer) Get(route string, handler http.HandlerFunc) {
+func (svr *appServer) Get(route string, handler HTTPHandler) {
 	svr.appRouter.Register("GET", route, handler)
 }
 
-func (svr *appServer) Put(route string, handler http.HandlerFunc) {
+func (svr *appServer) Put(route string, handler HTTPHandler) {
 	svr.appRouter.Register("PUT", route, handler)
 }
 
-func (svr *appServer) Delete(route string, handler http.HandlerFunc) {
+func (svr *appServer) Delete(route string, handler HTTPHandler) {
 	svr.appRouter.Register("DELETE", route, handler)
 }
 
-func (svr *appServer) Patch(route string, handler http.HandlerFunc) {
+func (svr *appServer) Patch(route string, handler HTTPHandler) {
 	svr.appRouter.Register("PATCH", route, handler)
 }
 
