@@ -10,24 +10,30 @@ import (
 )
 
 type AppRouter interface {
-	ServeHTTP(w http.ResponseWriter, request *http.Request)
+	ServeHTTP(rw http.ResponseWriter, request *http.Request)
 	Register(method string, path string, handler HTTPHandler)
+	Use(middlewares ...HTTPHandler)
 }
 
 type appRouter struct {
-	routes map[string][]*route
+	middlewares []HTTPHandler
+	routes      map[string][]*route
 }
 
 func NewRouter() AppRouter {
 	return &appRouter{routes: map[string][]*route{}}
 }
 
-func (router *appRouter) ServeHTTP(w http.ResponseWriter, request *http.Request) {
+func (router *appRouter) ServeHTTP(rw http.ResponseWriter, request *http.Request) {
 	matchedRoute, err := router.match(request.Method, request.URL.Path)
 	if err != nil {
-		http.NotFound(w, request)
+		http.NotFound(rw, request)
 	} else {
-		matchedRoute(context.TODO(), w, request)
+		contxt := context.TODO()
+		for _, middleware := range router.middlewares {
+			middleware(contxt, rw, request)
+		}
+		matchedRoute(contxt, rw, request)
 	}
 }
 
@@ -36,6 +42,10 @@ func (router *appRouter) Register(method string, path string, handler HTTPHandle
 		path:    newNamedPath(path),
 		handler: handler,
 	})
+}
+
+func (router *appRouter) Use(middlewares ...HTTPHandler) {
+	router.middlewares = middlewares
 }
 
 func (router *appRouter) match(method string, path string) (HTTPHandler, error) {

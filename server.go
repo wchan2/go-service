@@ -8,6 +8,7 @@ type Server interface {
 	Post(route string, handler HTTPHandler)
 	Delete(route string, handler HTTPHandler)
 	Patch(route string, handler HTTPHandler)
+	Use(middleware ...HTTPHandler)
 	Start(addr string)
 }
 
@@ -37,6 +38,10 @@ func (svr *appServer) Delete(route string, handler HTTPHandler) {
 
 func (svr *appServer) Patch(route string, handler HTTPHandler) {
 	svr.appRouter.Register("PATCH", route, handler)
+}
+
+func (svr *appServer) Use(middleware ...HTTPHandler) {
+	svr.appRouter.Use(middleware...)
 }
 
 func (svr *appServer) Start(addr string) {
