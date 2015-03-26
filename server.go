@@ -12,38 +12,38 @@ type Server interface {
 	Start(addr string)
 }
 
-func NewAppServer() Server {
-	return &appServer{appRouter: NewRouter()}
+func NewServiceServer() Server {
+	return &serviceServer{router: NewRouter()}
 }
 
-type appServer struct {
-	appRouter AppRouter
+type serviceServer struct {
+	router Router
 }
 
-func (svr *appServer) Post(route string, handler HTTPHandler) {
-	svr.appRouter.Register("POST", route, handler)
+func (svr *serviceServer) Post(route string, handler HTTPHandler) {
+	svr.router.Register("POST", route, handler)
 }
 
-func (svr *appServer) Get(route string, handler HTTPHandler) {
-	svr.appRouter.Register("GET", route, handler)
+func (svr *serviceServer) Get(route string, handler HTTPHandler) {
+	svr.router.Register("GET", route, handler)
 }
 
-func (svr *appServer) Put(route string, handler HTTPHandler) {
-	svr.appRouter.Register("PUT", route, handler)
+func (svr *serviceServer) Put(route string, handler HTTPHandler) {
+	svr.router.Register("PUT", route, handler)
 }
 
-func (svr *appServer) Delete(route string, handler HTTPHandler) {
-	svr.appRouter.Register("DELETE", route, handler)
+func (svr *serviceServer) Delete(route string, handler HTTPHandler) {
+	svr.router.Register("DELETE", route, handler)
 }
 
-func (svr *appServer) Patch(route string, handler HTTPHandler) {
-	svr.appRouter.Register("PATCH", route, handler)
+func (svr *serviceServer) Patch(route string, handler HTTPHandler) {
+	svr.router.Register("PATCH", route, handler)
 }
 
-func (svr *appServer) Use(middleware ...HTTPHandler) {
-	svr.appRouter.Use(middleware...)
+func (svr *serviceServer) Use(middleware ...HTTPHandler) {
+	svr.router.Use(middleware...)
 }
 
-func (svr *appServer) Start(addr string) {
-	http.ListenAndServe(addr, svr.appRouter)
+func (svr *serviceServer) Start(addr string) {
+	http.ListenAndServe(addr, svr.router)
 }
