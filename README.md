@@ -1,4 +1,4 @@
-## Service Layer
+## Go Service
 
 A minimal service library implemented in Go
 
