@@ -1,4 +1,4 @@
-package servicelayer
+package service
 
 import (
 	"net/http"
@@ -6,9 +6,9 @@ import (
 	"golang.org/x/net/context"
 )
 
-type HTTPHandler func(contxt context.Context, rw http.ResponseWriter, req *http.Request)
+type HTTPHandler func(contxt context.Context, req *http.Request, rw http.ResponseWriter)
 
-type route struct {
+type Route struct {
 	path    path
 	handler HTTPHandler
 }

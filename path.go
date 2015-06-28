@@ -1,4 +1,4 @@
-package servicelayer
+package service
 
 import "regexp"
 

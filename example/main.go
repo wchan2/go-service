@@ -1,16 +1,3 @@
-## Go Service
-
-A minimal service library implemented in Go
-
-## Dependencies
-
-Install the dependencies via the below commands.
-
-	go get golang.org/x/net/context
-
-## Example
-
-```go
 package main
 
 import (
@@ -38,9 +25,3 @@ func main() {
 	log.Print("server running on localhost:8080")
 	log.Fatal(server.Run("localhost", "8080"))
 }
-
-```
-
-## License
-
-service-layer is released under the [MIT License](http://www.opensource.org/licenses/MIT).

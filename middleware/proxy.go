@@ -4,11 +4,10 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/wchan2/go-service-layer"
 	"golang.org/x/net/context"
 )
 
-func Proxy(host, port string) servicelayer.HTTPHandler {
+func Proxy(host, port string) service.HTTPHandler {
 	return func(context context.Context, rw http.ResponseWriter, req *http.Request) {
 		var (
 			err        error

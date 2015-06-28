@@ -1,4 +1,4 @@
-package servicelayer
+package service
 
 import (
 	"fmt"
@@ -9,46 +9,46 @@ import (
 	"net/http"
 )
 
-type Router interface {
+type ServiceRouter interface {
 	ServeHTTP(rw http.ResponseWriter, request *http.Request)
 	Register(method string, path string, handler HTTPHandler)
 	Use(middlewares ...HTTPHandler)
 }
 
-type serviceRouter struct {
+type Router struct {
 	middlewares []HTTPHandler
-	routes      map[string][]*route
+	routes      map[string][]*Route
 }
 
-func NewRouter() Router {
-	return &serviceRouter{routes: map[string][]*route{}}
+func NewRouter() *Router {
+	return &Router{routes: map[string][]*Route{}}
 }
 
-func (router *serviceRouter) ServeHTTP(rw http.ResponseWriter, request *http.Request) {
+func (router *Router) ServeHTTP(rw http.ResponseWriter, request *http.Request) {
 	matchedRoute, err := router.match(request.Method, request.URL.Path)
 	if err != nil {
 		http.NotFound(rw, request)
 	} else {
 		contxt := context.TODO()
 		for _, middleware := range router.middlewares {
-			middleware(contxt, rw, request)
+			middleware(contxt, request, rw)
 		}
-		matchedRoute(contxt, rw, request)
+		matchedRoute(contxt, request, rw)
 	}
 }
 
-func (router *serviceRouter) Register(method string, path string, handler HTTPHandler) {
-	router.routes[strings.ToUpper(method)] = append(router.routes[strings.ToUpper(method)], &route{
+func (router *Router) Register(method string, path string, handler HTTPHandler) {
+	router.routes[strings.ToUpper(method)] = append(router.routes[strings.ToUpper(method)], &Route{
 		path:    newNamedPath(path),
 		handler: handler,
 	})
 }
 
-func (router *serviceRouter) Use(middlewares ...HTTPHandler) {
+func (router *Router) Use(middlewares ...HTTPHandler) {
 	router.middlewares = middlewares
 }
 
-func (router *serviceRouter) match(method string, path string) (HTTPHandler, error) {
+func (router *Router) match(method string, path string) (HTTPHandler, error) {
 	routes := router.routes[strings.ToUpper(method)]
 	if len(routes) == 0 {
 		return nil, fmt.Errorf("Path %s, not found", path)
