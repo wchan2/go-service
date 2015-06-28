@@ -29,11 +29,11 @@ func (router *Router) ServeHTTP(rw http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		http.NotFound(rw, request)
 	} else {
-		contxt := context.TODO()
+		contxt := context.Background()
 		for _, middleware := range router.middlewares {
-			middleware(contxt, request, rw)
+			middleware(contxt, rw, request)
 		}
-		matchedRoute(contxt, request, rw)
+		matchedRoute(contxt, rw, request)
 	}
 }
 
@@ -45,7 +45,9 @@ func (router *Router) Register(method string, path string, handler HTTPHandler) 
 }
 
 func (router *Router) Use(middlewares ...HTTPHandler) {
-	router.middlewares = middlewares
+	for _, middleware := range middlewares {
+		router.middlewares = append(router.middlewares, middleware)
+	}
 }
 
 func (router *Router) match(method string, path string) (HTTPHandler, error) {

@@ -6,7 +6,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-type HTTPHandler func(contxt context.Context, req *http.Request, rw http.ResponseWriter)
+type HTTPHandler func(contxt context.Context, rw http.ResponseWriter, req *http.Request)
 
 type Route struct {
 	path    path

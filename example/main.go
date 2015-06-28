@@ -12,7 +12,7 @@ import (
 func main() {
 	router := service.NewRouter()
 	server := service.NewServer(router)
-	server.Get("/healthcheck", func(contxt context.Context, req *http.Request, rw http.ResponseWriter) {
+	server.Get("/healthcheck", func(contxt context.Context, rw http.ResponseWriter, req *http.Request) {
 		response, err := json.Marshal(map[string]string{"status": "ok"})
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
