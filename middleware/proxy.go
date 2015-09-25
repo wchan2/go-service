@@ -10,6 +10,7 @@ import (
 	"golang.org/x/net/context"
 )
 
+// Proxy is a middleware HTTPHandler that allows proxying a request to a different host and port
 func Proxy(host string, port string) service.HTTPHandler {
 	return func(context context.Context, rw http.ResponseWriter, req *http.Request) {
 		var (
