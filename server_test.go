@@ -10,26 +10,26 @@ import (
 	"github.com/wchan2/go-service"
 )
 
-type Mock struct {
+type mockServer struct {
 	calledWith []interface{}
 	called     bool
 }
 
-func (m *Mock) Call(args ...interface{}) {
+func (m *mockServer) Call(args ...interface{}) {
 	m.calledWith = args
 	m.called = true
 }
 
-func (m *Mock) Called() bool {
+func (m *mockServer) Called() bool {
 	return m.called
 }
 
-func (m *Mock) CalledWith() []interface{} {
+func (m *mockServer) CalledWith() []interface{} {
 	return m.calledWith
 }
 
 type fakeRouter struct {
-	m *Mock
+	m *mockServer
 }
 
 func (f *fakeRouter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -50,7 +50,7 @@ func TestServiceServerInterface(t *testing.T) {
 
 func TestServerGet(t *testing.T) {
 	var (
-		router          *fakeRouter           = &fakeRouter{m: &Mock{}}
+		router          *fakeRouter           = &fakeRouter{m: &mockServer{}}
 		server          service.ServiceServer = service.NewServer(router)
 		expectedhandler service.HTTPHandler   = func(_ context.Context, _ http.ResponseWriter, _ *http.Request) {}
 	)
@@ -71,7 +71,7 @@ func TestServerGet(t *testing.T) {
 
 func TestServerPost(t *testing.T) {
 	var (
-		router          *fakeRouter           = &fakeRouter{m: &Mock{}}
+		router          *fakeRouter           = &fakeRouter{m: &mockServer{}}
 		server          service.ServiceServer = service.NewServer(router)
 		expectedhandler service.HTTPHandler   = func(_ context.Context, _ http.ResponseWriter, _ *http.Request) {}
 	)
@@ -92,7 +92,7 @@ func TestServerPost(t *testing.T) {
 
 func TestServerPatch(t *testing.T) {
 	var (
-		router          *fakeRouter           = &fakeRouter{m: &Mock{}}
+		router          *fakeRouter           = &fakeRouter{m: &mockServer{}}
 		server          service.ServiceServer = service.NewServer(router)
 		expectedhandler service.HTTPHandler   = func(_ context.Context, _ http.ResponseWriter, _ *http.Request) {}
 	)
@@ -113,7 +113,7 @@ func TestServerPatch(t *testing.T) {
 
 func TestServerPut(t *testing.T) {
 	var (
-		router          *fakeRouter           = &fakeRouter{m: &Mock{}}
+		router          *fakeRouter           = &fakeRouter{m: &mockServer{}}
 		server          service.ServiceServer = service.NewServer(router)
 		expectedhandler service.HTTPHandler   = func(_ context.Context, _ http.ResponseWriter, _ *http.Request) {}
 	)
@@ -134,7 +134,7 @@ func TestServerPut(t *testing.T) {
 
 func TestServerDelete(t *testing.T) {
 	var (
-		router          *fakeRouter           = &fakeRouter{m: &Mock{}}
+		router          *fakeRouter           = &fakeRouter{m: &mockServer{}}
 		server          service.ServiceServer = service.NewServer(router)
 		expectedhandler service.HTTPHandler   = func(_ context.Context, _ http.ResponseWriter, _ *http.Request) {}
 	)
@@ -155,7 +155,7 @@ func TestServerDelete(t *testing.T) {
 
 func TestServerUse(t *testing.T) {
 	var (
-		router          *fakeRouter           = &fakeRouter{m: &Mock{}}
+		router          *fakeRouter           = &fakeRouter{m: &mockServer{}}
 		server          service.ServiceServer = service.NewServer(router)
 		expectedhandler service.HTTPHandler   = func(_ context.Context, _ http.ResponseWriter, _ *http.Request) {}
 	)
