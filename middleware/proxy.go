@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -16,7 +17,7 @@ func Proxy(host string, port string) service.HTTPHandler {
 			proxiedReq *http.Request
 			response   *http.Response
 		)
-		proxiedReq, err = http.NewRequest(req.Method, host+":"+port+req.URL.Path, req.Body)
+		proxiedReq, err = http.NewRequest(req.Method, fmt.Sprintf("%s:%s%s", host, port, req.URL.Path), req.Body)
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
