@@ -29,7 +29,7 @@ func NewRouter() *Router {
 
 // ServeHTTP serves an HTTP response to an HTTP request to a matching router
 func (router *Router) ServeHTTP(rw http.ResponseWriter, request *http.Request) {
-	matchedRoute, err := router.match(request.Method, request.URL.Path)
+	matchedRoute, err := router.matchRequest(request)
 	if err != nil {
 		http.NotFound(rw, request)
 	} else {
@@ -44,7 +44,8 @@ func (router *Router) ServeHTTP(rw http.ResponseWriter, request *http.Request) {
 // Register adds a handler that can be reached when a request matches the specified HTTP method and URL path
 func (router *Router) Register(method string, path string, handler HTTPHandler) {
 	router.routes[strings.ToUpper(method)] = append(router.routes[strings.ToUpper(method)], &Route{
-		path:    newNamedPath(path),
+		method:  method,
+		path:    path,
 		handler: handler,
 	})
 }
@@ -56,19 +57,19 @@ func (router *Router) Use(middlewares ...HTTPHandler) {
 	}
 }
 
-func (router *Router) match(method string, path string) (HTTPHandler, error) {
-	routes := router.routes[strings.ToUpper(method)]
+func (router *Router) matchRequest(request *http.Request) (HTTPHandler, error) {
+	routes := router.routes[strings.ToUpper(request.Method)]
 	if len(routes) == 0 {
-		return nil, fmt.Errorf("Path %s, not found", path)
+		return nil, fmt.Errorf("Path %s, not found", request.URL.Path)
 	}
 	for _, route := range routes {
-		matched, err := route.path.match(path)
+		matched, err := route.matchPath(request.URL.Path)
 		if err != nil {
-			return nil, fmt.Errorf("Unable to match Path, %s with %s", path, route.path.uri())
+			return nil, fmt.Errorf("Unable to match Path, %s with %s", route.path, request.URL.Path)
 		}
 		if matched {
 			return route.handler, nil
 		}
 	}
-	return nil, fmt.Errorf("Path %s not found", path)
+	return nil, fmt.Errorf("Path %s not found", request.URL.Path)
 }
