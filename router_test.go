@@ -5,7 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/wchan2/go-service"
+	"github.com/wchan2/go-service-framework"
+
 	"golang.org/x/net/context"
 )
 
