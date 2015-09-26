@@ -18,7 +18,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/wchan2/go-service"
+	"github.com/wchan2/go-service-framework"
 	"golang.org/x/net/context"
 )
 
