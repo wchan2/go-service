@@ -56,4 +56,4 @@ func main() {
 
 ## License
 
-service-layer is released under the [MIT License](http://www.opensource.org/licenses/MIT).
+go-service-framework is released under the [MIT License](http://www.opensource.org/licenses/MIT).
