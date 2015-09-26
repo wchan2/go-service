@@ -7,7 +7,7 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/wchan2/go-service"
+	"github.com/wchan2/go-service-framework"
 )
 
 type mockServer struct {

@@ -1,4 +1,4 @@
-## Go Service
+## Go Service ![build](https://travis-ci.org/wchan2/go-service-framework.svg?branch=master)
 
 A minimal service library implemented in Go
 
@@ -18,7 +18,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/wchan2/go-service"
+	"github.com/wchan2/go-service-framework"
 	"golang.org/x/net/context"
 )
 
